@@ -48,7 +48,8 @@ class AbstractAccountHandler:
     limit = None
     path = ''
 
-    def __init__(self, access_token, *args, **kwargs):
+    def __init__(self, access_token, instagram_bussines_account_id=None ,*args, **kwargs):
+        self.instagram_bussines_account_id = instagram_bussines_account_id
         self.graph = BaseGraphRequestHandler(
             access_token=access_token,
             query_dict=self.build_query_params(),
