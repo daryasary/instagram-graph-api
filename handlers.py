@@ -58,3 +58,22 @@ class InstagramAccountTags(AbstractAccountHandler):
     @property
     def path(self):
         return '{}/tags/'.format(self.instagram_business_account_id)
+
+
+class InstagramAccountMediaList(AbstractAccountHandler):
+    """Get paginated instagram media list for account which id is provided
+        inputs:
+            - access_token
+            - instagram_business_account_id
+            - limit
+    """
+    fields = (
+        'caption', 'comments_count', 'id', 'ig_id', 'is_comment_enabled',
+        'like_count', 'media_type', 'media_url', 'owner', 'permalink',
+        'shortcode', 'thumbnail_url', 'timestamp', 'username'
+    )
+    limit = 100
+
+    @property
+    def path(self):
+        return '{}/media'.format(self.instagram_business_account_id)
