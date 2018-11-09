@@ -46,10 +46,12 @@ class AbstractAccountHandler:
 
     fields = None
     limit = None
+    metrics = None
+    period = None
     path = ''
 
-    def __init__(self, access_token, instagram_bussines_account_id=None ,*args, **kwargs):
-        self.instagram_bussines_account_id = instagram_bussines_account_id
+    def __init__(self, access_token, instagram_business_account_id=None ,*args, **kwargs):
+        self.instagram_business_account_id = instagram_business_account_id
         self.graph = BaseGraphRequestHandler(
             access_token=access_token,
             query_dict=self.build_query_params(),
@@ -75,6 +77,10 @@ class AbstractAccountHandler:
             query_dict['fields'] = self.fields_str
         if self.limit:  # Is None or 0
             query_dict['limit'] = self.limit
+        if self.metrics is not None:
+            query_dict['metrics'] = self.metrics
+        if self.period is not None:
+            query_dict['period'] = self.period
         return query_dict
 
     def build_path_list(self):

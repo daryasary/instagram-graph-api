@@ -19,4 +19,14 @@ class InstagramAccountData(AbstractAccountHandler):
 
     @property
     def path(self):
-        return str(self.instagram_bussines_account_id)
+        return str(self.instagram_business_account_id)
+
+
+class InstagramAccountInsights(AbstractAccountHandler):
+    """To fetch instagram insight from account which account is provided"""
+    metrics = ['impressions', ' reach', ' profile_views']
+    period = 'day'
+
+    @property
+    def path(self):
+        return '{}/insights/'.format(self.instagram_business_account_id)
