@@ -95,3 +95,12 @@ class InstagramMediaComments(AbstractMediaHandler):
         if self.limit is None:
             return "{}{}".format(self.fields_pattern, self.sub_fields)
         return "{}.limit({}){}".format(self.fields_pattern, self.limit, self.sub_fields)
+
+
+class InstagramMediaInsights(AbstractMediaHandler):
+    """Read one specific media's insights"""
+    metrics = ['engagement', 'impressions', 'reach']
+
+    @property
+    def path(self):
+        return "{}/insights".format(self.instagram_media_id)
