@@ -1,4 +1,4 @@
-from core import AbstractAccountHandler
+from core import AbstractAccountHandler, AbstractMediaHandler
 
 
 class InstagramAccountsList(AbstractAccountHandler):
@@ -77,3 +77,21 @@ class InstagramAccountMediaList(AbstractAccountHandler):
     @property
     def path(self):
         return '{}/media'.format(self.instagram_business_account_id)
+
+
+class InstagramMediaComments(AbstractMediaHandler):
+    """Fetch comments for media which media_id is given"""
+    fields_pattern = "comments"
+    sub_fields = "{like_count,media,id,text,hidden, timestamp,user,username," \
+                 "replies{like_count,media,text, timestamp,id,user,username}}"
+    limite = 20
+
+    @property
+    def path(self):
+        return "/{}/".format(self.instagram_media_id)
+
+    @property
+    def fields(self):
+        if self.limit is None:
+            return "{}{}".format(self.fields_pattern, self.sub_fields)
+        return "{}.limit({}){}".format(self.fields_pattern, self.limit, self.sub_fields)
