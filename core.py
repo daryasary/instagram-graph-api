@@ -42,7 +42,8 @@ class AbstractAccountHandler:
         - limit: limit of objects per page (optional), type: int() or str()
 
     and the following fields required in class initiation:
-        - access_token: user access token which comes from facebook"""
+        - access_token: user access token which comes from facebook
+        - instagram_business_account_id: account id given from facebook"""
 
     fields = None
     limit = None
@@ -60,6 +61,67 @@ class AbstractAccountHandler:
 
     @property
     def fields_str(self):
+        return ','.join(self.fields)
+
+    @property
+    def wrapped_path(self):
+        if self.path.startswith('/'):
+            self.path = self.path[1:]
+
+        if self.path.endswith('/'):
+            self.path = self.path[:-1]
+        return self.path
+
+    def build_query_params(self):
+        query_dict = dict()
+        if self.fields is not None:
+            query_dict['fields'] = self.fields_str
+        if self.limit:  # Is None or 0
+            query_dict['limit'] = self.limit
+        if self.metrics is not None:
+            query_dict['metrics'] = self.metrics
+        if self.period is not None:
+            query_dict['period'] = self.period
+        return query_dict
+
+    def build_path_list(self):
+        return self.path.split('/')
+
+    class Meta:
+        abstract = True
+
+
+class AbstractMediaHandler:
+    """One major type of graph API nodes is Media, and AbstractMediaHandler
+    if parent for all other classes to aggregate required tools, each child
+    class should define following variables:
+        - path: the node path you are going to read data from, type:str()
+        - fields: needed fields your are going from given node: type: list()
+        - limit: limit of objects per page (optional), type: int() or str()
+
+    and the following fields required in class initiation:
+        - access_token: user access token which comes from facebook
+        - instagram_media_id: media object id which we are going to read data"""
+
+    fields = None
+    sub_fields = None
+    limit = None
+    metrics = None
+    period = None
+    path = ''
+
+    def __init__(self, access_token, instagram_media_id=None, *args, **kwargs):
+        self.instagram_media_id= instagram_media_id
+        self.graph = BaseGraphRequestHandler(
+            access_token=access_token,
+            query_dict=self.build_query_params(),
+            path_list=self.build_path_list()
+        )
+
+    @property
+    def fields_str(self):
+        if isinstance(self.fields, str):
+            return self.fields
         return ','.join(self.fields)
 
     @property
