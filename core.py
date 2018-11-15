@@ -1,3 +1,5 @@
+import requests
+
 from urllib.parse import urlencode, urljoin
 
 
@@ -12,6 +14,9 @@ class BaseGraphRequestHandler:
         self.query_params = self.__prepare_query_params(query_dict)
         self.path = self.__prepare_path(path_list)
         self._url = self.__prepare_url()
+        self._next = None
+        self._previous = None
+        self._data = None
 
     def __prepare_query_params(self, query_dict):
         query_dict['access_token'] = self.access_token
@@ -25,9 +30,35 @@ class BaseGraphRequestHandler:
     def __prepare_url(self):
         return urljoin(self.base_url, '?'.join([self.path, self.query_params]))
 
+    def __set_pages(self, response):
+        if hasattr(response, 'pages'):
+            pages = getattr(response, 'pages')
+            if hasattr(pages, 'next'):
+                self._next = getattr(pages, 'next')
+            if hasattr(pages, 'previous'):
+                self._previous = getattr(pages, 'previous')
+            if hasattr(response, 'data'):
+                self._data = getattr(pages, 'data')
+        else:
+            self._data = response
+
+    def __parse_response(self, response):
+        if hasattr(self, 'pars_response'):
+            return self.parse_response(response)
+        return response['previous'], response['data'], response['next']
+
+    def has_next(self):
+        if self._data is None:
+            return True
+        return bool(self._next)
+
     def get(self):
-        # TODO: get self._url, curl, parse response and return python dict()
-        pass
+        response = requests.get(self._url)
+        if response.status_code//100 == 2:
+            self.__set_pages(response.json())
+            return self.__parse_response(response)
+        else:
+            return response
 
     class Meta:
         abstract = True
