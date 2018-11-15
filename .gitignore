@@ -12,3 +12,4 @@ tests/.coverage
 build/
 tests/report/
 .idea
+local_*
