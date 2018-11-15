@@ -7,9 +7,13 @@ class InstagramAccountsList(AbstractAccountHandler):
         inputs:
             - access_token
     """
-
     path = '/me/accounts/'
     fields = ['instagram_business_account']
+
+    @staticmethod
+    def parse_response(response):
+        """Filter accounts and show pages which linked with instagram account"""
+        return [account for account in response if 'account_id' in response]
 
 
 class InstagramAccountData(AbstractAccountHandler):
