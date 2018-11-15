@@ -31,14 +31,15 @@ class BaseGraphRequestHandler:
         return urljoin(self.base_url, '?'.join([self.path, self.query_params]))
 
     def __set_pages(self, response):
-        if hasattr(response, 'pages'):
-            pages = getattr(response, 'pages')
-            if hasattr(pages, 'next'):
-                self._next = getattr(pages, 'next')
-            if hasattr(pages, 'previous'):
-                self._previous = getattr(pages, 'previous')
+        if hasattr(response, 'paging'):
+            paging = getattr(response, 'paging')
+            cursor = getattr(paging, 'cursors')
+            if hasattr(cursor, 'next'):
+                self._next = getattr(cursor, 'next')
+            if hasattr(cursor, 'previous'):
+                self._previous = getattr(cursor, 'previous')
             if hasattr(response, 'data'):
-                self._data = getattr(pages, 'data')
+                self._data = getattr(cursor, 'data')
         else:
             self._data = response
 
@@ -56,7 +57,7 @@ class BaseGraphRequestHandler:
         response = requests.get(self._url)
         if response.status_code//100 == 2:
             self.__set_pages(response.json())
-            return self.__parse_response(response)
+            return self.__parse_response(self._data)
         else:
             return response
 

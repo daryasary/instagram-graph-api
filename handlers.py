@@ -11,9 +11,9 @@ class InstagramAccountsList(AbstractAccountHandler):
     fields = ['instagram_business_account']
 
     @staticmethod
-    def parse_response(response):
+    def parse_response(data):
         """Filter accounts and show pages which linked with instagram account"""
-        return [account for account in response if 'account_id' in response]
+        return [acnt for acnt in data if 'instagram_business_account' in data]
 
 
 class InstagramAccountData(AbstractAccountHandler):
