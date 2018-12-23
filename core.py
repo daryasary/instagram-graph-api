@@ -31,13 +31,14 @@ class BaseGraphRequestHandler:
         return urljoin(self.base_url, '?'.join([self.path, self.query_params]))
 
     def __set_pages(self, response):
+        # TODO: Refactor all over
         if hasattr(response, 'paging'):
             paging = getattr(response, 'paging')
             cursor = getattr(paging, 'cursors')
-            if hasattr(cursor, 'next'):
-                self._next = getattr(cursor, 'next')
-            if hasattr(cursor, 'previous'):
-                self._previous = getattr(cursor, 'previous')
+            if hasattr(cursor, 'after'):
+                self._next = getattr(cursor, 'after')
+            if hasattr(cursor, 'before'):
+                self._previous = getattr(cursor, 'before')
             if hasattr(response, 'data'):
                 self._data = getattr(cursor, 'data')
         else:
