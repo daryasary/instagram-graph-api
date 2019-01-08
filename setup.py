@@ -12,6 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/daryasary/instagram-graph-api",
+    # todo: requests is not going to be detected
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
