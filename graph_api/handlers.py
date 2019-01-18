@@ -1,4 +1,4 @@
-from core import AbstractAccountHandler, AbstractMediaHandler
+from graph_api.core import AbstractAccountHandler, AbstractMediaHandler
 
 
 class InstagramAccountsList(AbstractAccountHandler):
