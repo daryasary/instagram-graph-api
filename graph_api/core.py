@@ -31,23 +31,20 @@ class BaseGraphRequestHandler:
         return urljoin(self.base_url, '?'.join([self.path, self.query_params]))
 
     def __set_pages(self, response):
-        # TODO: Refactor all over
-        if hasattr(response, 'paging'):
-            paging = getattr(response, 'paging')
-            cursor = getattr(paging, 'cursors')
-            if hasattr(cursor, 'after'):
-                self._next = getattr(cursor, 'after')
-            if hasattr(cursor, 'before'):
-                self._previous = getattr(cursor, 'before')
-            if hasattr(response, 'data'):
-                self._data = getattr(cursor, 'data')
+        if 'paging' in response.keys():
+            paging = response.get('paging')
+            cursors = paging.get('cursors')
+            if 'after' in cursors.keys():
+                self._next = cursors.get('after')
+            if 'before' in cursors.keys():
+                self._previous = cursors.get('before')
+            if 'data' in response.keys():
+                self._data = response.get('data')
         else:
             self._data = response
 
-    def __parse_response(self, response):
-        if hasattr(self, 'pars_response'):
-            return self.parse_response(response)
-        return response['previous'], response['data'], response['next']
+    def _parse_response(self, response):
+        return self._previous, response, self._next
 
     def has_next(self):
         if self._data is None:
@@ -58,9 +55,8 @@ class BaseGraphRequestHandler:
         response = requests.get(self._url)
         if response.status_code//100 == 2:
             self.__set_pages(response.json())
-            return self.__parse_response(self._data)
-        else:
-            return response
+            return True, self._data
+        return False, response
 
     class Meta:
         abstract = True
@@ -119,6 +115,14 @@ class AbstractAccountHandler:
 
     def build_path_list(self):
         return self.path.split('/')
+
+    def get(self):
+        result, response = self.graph.get()
+        if not result:
+            return response
+        if not hasattr(self, 'parse_response'):
+            setattr(self, 'parse_response', self.graph._parse_response)
+        return self.parse_response(response)
 
     class Meta:
         abstract = True
