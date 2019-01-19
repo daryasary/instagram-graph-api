@@ -1,13 +1,10 @@
 import unittest
 
+from fixtures import *
 from graph_api import InstagramGraphHandler
 from graph_api.handlers import InstagramAccountsList, InstagramAccountData, \
     InstagramAccountInsights, InstagramAccountTags, InstagramAccountMediaList, \
     InstagramMediaComments, InstagramMediaInsights
-
-SAMPLE_ACCESS_TOKEN = 'H0xvNgoBH2y7bZw9jJWEmHhZDxU5F8alvSURoTJnffb8WJMmcpJpoPtjEnzCVvls'
-SAMPLE_ACCOUNT_ID = '8019940745056318'
-SAMPLE_MEDIA_ID = '2365457976114372'
 
 
 class InstagramGraphHandlerTests(unittest.TestCase):
