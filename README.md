@@ -4,20 +4,25 @@ Python library to connect [instagram graph API](https://developers.facebook.com/
 
 
 ## Usage
-```
-from graph_api import InstagramGraphHandler
+First get an access_token from [here](https://developers.facebook.com/tools/explorer)
 
-# Get account data 
-handler = InstagramGraphHandlers(access_token=<your-access_token>, 
-                                 account_id=<your-instagram-account-id>)
-account_data = handler.account_data.get()
+    from graph_api import InstagramGraphHandler
+    
+    # Get account data 
+    handler = InstagramGraphHandlers(access_token=<your-access_token>, 
+                                     account_id=<your-instagram-account-id>)
+    account_data = handler.account_data.get()
+    
+    # Get media data
+    handler = InstagramGraphHandlers(access_token=<your-access_token>, 
+                                     media_id=<instagram-media-id>)
+    media_comments = handler.media_comments.get()
 
-# Get media data
-handler = InstagramGraphHandlers(access_token=<your-access_token>, 
-                                 media_id=<instagram-media-id>)
-media_comments = handler.media_comments.get()
-```
 
-##notes:
+##Notes:
 * All `.get()` API call only return one page response and you should loop over next pages urls.
-* All handlers are available stand alone from graph_api.handler path. 
+* All handlers are available stand alone from graph_api.handler path
+
+
+##Todo:
+* Add pagination calls. 
