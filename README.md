@@ -17,12 +17,12 @@ First get an access_token from [here](https://developers.facebook.com/tools/expl
     handler = InstagramGraphHandlers(access_token=<your-access_token>, 
                                      media_id=<instagram-media-id>)
     media_comments = handler.media_comments.get()
+    
+    # Pagination support
+    while handler.media_comments.graph.has_next():
+        media_comments.extend(handler.media_comments.get())
 
 
 ##Notes:
 * All `.get()` API call only return one page response and you should loop over next pages urls.
 * All handlers are available stand alone from graph_api.handler path
-
-
-##Todo:
-* Add pagination calls. 
