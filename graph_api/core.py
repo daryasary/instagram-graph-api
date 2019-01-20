@@ -16,7 +16,10 @@ class BaseGraphRequestHandler:
         self._url = self.__prepare_url()
         self._next = None
         self._previous = None
+        self._cursor_after = None
+        self._cursor_before = None
         self._data = None
+        self._cached_response = None
 
     def __prepare_query_params(self, query_dict):
         query_dict['access_token'] = self.access_token
@@ -30,29 +33,47 @@ class BaseGraphRequestHandler:
     def __prepare_url(self):
         return urljoin(self.base_url, '?'.join([self.path, self.query_params]))
 
+    def __prepare_partial_url(self, query):
+        params = self.__prepare_query_params(query)
+        return urljoin(self.base_url, '?'.join([self.path, params]))
+
+    def __reset_cursor(self):
+        self._next = None
+        self._previous = None
+        self._cursor_after = None
+        self._cursor_before = None
+
     def __set_pages(self, response):
         if 'paging' in response.keys():
             paging = response.get('paging')
             cursors = paging.get('cursors')
             if 'after' in cursors.keys():
-                self._next = cursors.get('after')
+                self._cursor_after = cursors.get('after')
+                self._next = self.__prepare_partial_url(
+                    {'after': self._cursor_after}
+                )
             if 'before' in cursors.keys():
-                self._previous = cursors.get('before')
+                self._cursor_before = cursors.get('before')
+                self._previous = self.__prepare_partial_url(
+                    {'after': self._cursor_before}
+                )
             if 'data' in response.keys():
                 self._data = response.get('data')
         else:
             self._data = response
 
     def _parse_response(self, response):
-        return self._previous, response, self._next
+        # return self._previous, response, self._next
+        return response
 
     def has_next(self):
-        if self._data is None:
-            return True
         return bool(self._next)
 
     def get(self):
-        response = requests.get(self._url)
+        url = self._next if self.has_next() else self._url
+        response = requests.get(url)
+        self._cached_response = response.text
+        self.__reset_cursor()
         if response.status_code//100 == 2:
             self.__set_pages(response.json())
             return True, self._data
