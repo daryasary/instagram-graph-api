@@ -1,6 +1,10 @@
 import requests
 
-from urllib.parse import urlencode, urljoin
+try:
+    from urllib.parse import urlencode, urljoin
+except ImportError:
+    from urllib import urlencode
+    from urlparse import urljoin
 
 
 class BaseGraphRequestHandler:
