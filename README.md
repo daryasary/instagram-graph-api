@@ -26,3 +26,7 @@ First get an access_token from [here](https://developers.facebook.com/tools/expl
 ##Notes:
 * All `.get()` API call only return one page response and you should loop over next pages urls.
 * All handlers are available stand alone from graph_api.handler path
+
+
+##Todo:
+* Add token extender to exchange short-live token to long-live
