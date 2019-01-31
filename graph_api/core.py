@@ -76,11 +76,7 @@ class BaseGraphRequestHandler:
         # return self._previous, response, self._next
         return response
 
-    def has_next(self):
-        return bool(self._next)
-
-    def get(self):
-        url = self._next if self.has_next() else self._url
+    def __get_data(self, url):
         response = requests.get(url)
         self._cached_response = response.text
         self.__reset_cursor()
@@ -88,6 +84,19 @@ class BaseGraphRequestHandler:
             self.__set_pages(response.json())
             return True, self._data
         return False, response
+
+    def has_next(self):
+        return bool(self._next)
+
+    def has_previous(self):
+        return bool(self._previous)
+
+    def get(self, reverse=False):
+        if reverse:
+            url = self._previous if self.has_previous() else self._url
+        else:
+            url = self._next if self.has_next() else self._url
+        return self.__get_data(url)
 
     class Meta:
         abstract = True
@@ -131,8 +140,8 @@ class CommonAbstractHandler:
     def build_path_list(self):
         return self.path.split('/')
 
-    def get(self):
-        result, response = self.graph.get()
+    def get(self, reverse=False):
+        result, response = self.graph.get(reverse)
         if not result:
             # TODO: Return True/False result instead of returning whole response
             return response
