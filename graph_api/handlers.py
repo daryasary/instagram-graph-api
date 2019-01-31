@@ -39,7 +39,7 @@ class InstagramAccountInsights(AbstractAccountHandler):
             - access_token
             - instagram_business_account_id
     """
-    metrics = ['impressions', ' reach', ' profile_views']
+    metric = ['impressions', ' reach', ' profile_views']
     period = 'day'
 
     @property
@@ -103,7 +103,7 @@ class InstagramMediaComments(AbstractMediaHandler):
 
 class InstagramMediaInsights(AbstractMediaHandler):
     """Read one specific media's insights"""
-    metrics = ['engagement', 'impressions', 'reach']
+    metric = ['engagement', 'impressions', 'reach']
 
     @property
     def path(self):

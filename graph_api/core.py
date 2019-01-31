@@ -93,7 +93,7 @@ class CommonAbstractHandler:
     fields = None
     sub_fields = None
     limit = None
-    metrics = None
+    metric = None
     period = None
     path = ''
 
@@ -116,8 +116,8 @@ class CommonAbstractHandler:
             query_dict['fields'] = self.fields_str
         if self.limit:  # Is None or 0
             query_dict['limit'] = self.limit
-        if self.metrics is not None:
-            query_dict['metrics'] = self.metrics
+        if self.metric is not None:
+            query_dict['metric'] = ','.join(self.metric)
         if self.period is not None:
             query_dict['period'] = self.period
         return query_dict
@@ -128,6 +128,7 @@ class CommonAbstractHandler:
     def get(self):
         result, response = self.graph.get()
         if not result:
+            # TODO: Return True/False result instead of returning whole response
             return response
         if not hasattr(self, 'parse_response'):
             setattr(self, 'parse_response', self.graph._parse_response)
