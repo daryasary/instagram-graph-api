@@ -51,16 +51,22 @@ class BaseGraphRequestHandler:
         if 'paging' in response.keys():
             paging = response.get('paging')
             cursors = paging.get('cursors')
-            if 'after' in cursors.keys():
-                self._cursor_after = cursors.get('after')
-                self._next = self.__prepare_partial_url(
-                    {'after': self._cursor_after}
-                )
-            if 'before' in cursors.keys():
-                self._cursor_before = cursors.get('before')
-                self._previous = self.__prepare_partial_url(
-                    {'after': self._cursor_before}
-                )
+            if cursors is not None:
+                if 'after' in cursors.keys():
+                    self._cursor_after = cursors.get('after')
+                    self._next = self.__prepare_partial_url(
+                        {'after': self._cursor_after}
+                    )
+                if 'before' in cursors.keys():
+                    self._cursor_before = cursors.get('before')
+                    self._previous = self.__prepare_partial_url(
+                        {'after': self._cursor_before}
+                    )
+            else:
+                if 'next' in paging:
+                    self._next = paging['next']
+                if 'previous' in paging:
+                    self._previous = paging['previous']
             if 'data' in response.keys():
                 self._data = response.get('data')
         else:
