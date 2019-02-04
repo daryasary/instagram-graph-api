@@ -1,4 +1,5 @@
-from graph_api.core import AbstractAccountHandler, AbstractMediaHandler
+from graph_api.core import AbstractAccountHandler, AbstractMediaHandler, \
+    AbstractHashtagHandler
 
 
 class InstagramAccountsList(AbstractAccountHandler):
@@ -108,3 +109,14 @@ class InstagramMediaInsights(AbstractMediaHandler):
     @property
     def path(self):
         return "{}/insights".format(self.instagram_media_id)
+
+
+class InstagramHashtagSearch(AbstractHashtagHandler):
+    """Search hashtag through instagram and return hashtag_id and name"""
+
+    path = "ig_hashtag_search"
+
+    @property
+    def extra_params(self):
+        params = dict(user_id=self.instagram_business_account_id, q=self.q)
+        return params
