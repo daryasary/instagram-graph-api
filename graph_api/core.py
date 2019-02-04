@@ -187,7 +187,7 @@ class AbstractMediaHandler(CommonAbstractHandler):
         - instagram_media_id: media object id which we are going to read data"""
 
     def __init__(self, access_token, instagram_media_id=None, *args, **kwargs):
-        self.instagram_media_id= instagram_media_id
+        self.instagram_media_id = instagram_media_id
         self.graph = BaseGraphRequestHandler(
             access_token=access_token,
             query_dict=self.build_query_params(),
@@ -199,3 +199,16 @@ class AbstractMediaHandler(CommonAbstractHandler):
         if isinstance(self.fields, str):
             return self.fields
         return ','.join(self.fields)
+
+
+class AbstractHashtagHandler(CommonAbstractHandler):
+    """Abstract handler for all aspects of hashtag handler, and all other
+    related classes should inherit from this class to handle hashtag jobs"""
+
+    def __init__(self, access_token, instagram_hashtag_id=None, *Args, **kwargs):
+        self.instagram_hashtag_id = instagram_hashtag_id
+        self.graph = BaseGraphRequestHandler(
+            access_token=access_token,
+            query_dict=self.build_query_params(),
+            path_list=self.build_path_list()
+        )
