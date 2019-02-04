@@ -110,6 +110,7 @@ class CommonAbstractHandler:
     limit = None
     metric = None
     period = None
+    extra_params = None
     path = ''
 
     @property
@@ -135,6 +136,8 @@ class CommonAbstractHandler:
             query_dict['metric'] = ','.join(self.metric)
         if self.period is not None:
             query_dict['period'] = self.period
+        if self.extra_params is not None:
+            query_dict = {**self.extra_params, **query_dict}
         return query_dict
 
     def build_path_list(self):
@@ -165,7 +168,7 @@ class AbstractAccountHandler(CommonAbstractHandler):
         - access_token: user access token which comes from facebook
         - instagram_business_account_id: account id given from facebook"""
 
-    def __init__(self, access_token, instagram_business_account_id=None ,*args, **kwargs):
+    def __init__(self, access_token, instagram_business_account_id=None,*args, **kwargs):
         self.instagram_business_account_id = instagram_business_account_id
         self.graph = BaseGraphRequestHandler(
             access_token=access_token,
@@ -205,8 +208,13 @@ class AbstractHashtagHandler(CommonAbstractHandler):
     """Abstract handler for all aspects of hashtag handler, and all other
     related classes should inherit from this class to handle hashtag jobs"""
 
-    def __init__(self, access_token, instagram_hashtag_id=None, *Args, **kwargs):
+    def __init__(
+            self, access_token, instagram_business_account_id=None,
+            instagram_hashtag_id=None, q=None, *args, **kwargs
+    ):
+        self.instagram_business_account_id = instagram_business_account_id,
         self.instagram_hashtag_id = instagram_hashtag_id
+        self.q = q
         self.graph = BaseGraphRequestHandler(
             access_token=access_token,
             query_dict=self.build_query_params(),
