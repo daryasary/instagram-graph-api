@@ -120,3 +120,37 @@ class InstagramHashtagSearch(AbstractHashtagHandler):
     def extra_params(self):
         params = dict(user_id=self.instagram_business_account_id, q=self.q)
         return params
+
+
+class InstagramHashtagRecentMedia(AbstractHashtagHandler):
+    """Get recent media for given hashtag"""
+    fields = (
+        "caption", "like_count", "comments_count", "id",
+        "media_url", "permalink", "media_type",
+    )
+
+    @property
+    def path(self):
+        return '{}/recent_media'.format(self.instagram_hashtag_id)
+
+    @property
+    def extra_params(self):
+        params = dict(user_id=self.instagram_business_account_id)
+        return params
+
+
+class InstagramHashtagTopMedia(AbstractHashtagHandler):
+    """Get top media for given hashtag"""
+    fields = (
+        "caption", "like_count", "comments_count", "id",
+        "media_url", "permalink", "media_type",
+    )
+
+    @property
+    def path(self):
+        return '{}/top_media'.format(self.instagram_hashtag_id)
+
+    @property
+    def extra_params(self):
+        params = dict(user_id=self.instagram_business_account_id)
+        return params
