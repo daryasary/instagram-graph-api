@@ -212,7 +212,7 @@ class AbstractHashtagHandler(CommonAbstractHandler):
             self, access_token, instagram_business_account_id=None,
             instagram_hashtag_id=None, q=None, *args, **kwargs
     ):
-        self.instagram_business_account_id = instagram_business_account_id,
+        self.instagram_business_account_id = instagram_business_account_id
         self.instagram_hashtag_id = instagram_hashtag_id
         self.q = q
         self.graph = BaseGraphRequestHandler(
